@@ -30,8 +30,11 @@ class Game:
         self.hindringer = []
         self.burger = []
         self.soda = []
+        self.star = []
+
         self.jump_count = 0
         self.dt = self.clock.tick(FPS) / 1000
+        self.score = 0
         
         self.run()
 
@@ -41,52 +44,53 @@ class Game:
         # Game loop
         self.playing = True
 
+        t1 = time.time()
+
         while self.playing:
             self.clock.tick(FPS)
             self.events()
-    
-            while len(self.hindringer) < 14: 
+
+            t2 = time.time()
+
+            dt = t2-t1
+
+            if dt >= 1:
                 a = random.randint(1,2)
                 if a == 1:
                     ny = HindringV()
                 elif a == 2:
                     ny = HindringH()
                 
-                safe = True
+                self.hindringer.append(ny)
 
-                for h in self.hindringer:
-                    if abs(h.x-ny.x) < 100:
-                        safe = False
-                        break
-                    
-                if safe:
-                    self.hindringer.append(ny)
-                
+                t1 = time.time()
+
             while len(self.burger) < 1:
                 self.burger.append(Burger())
+
             while len(self.soda) < 1:
                 self.soda.append(Soda())
 
-            
+            while len(self.star) < 1:
+                self.star.append(Star())
             
             self.update()
             self.draw()
+            
     
     def antallPoeng(self):
-        #dt = self.clock.tick(FPS) / 1000
         global timer
-        global SCORE_VALUE
         timer += self.dt
         
         font = pg.font.SysFont('Arial', 20)
-        text_img = font.render(f"Poengscore: {SCORE_VALUE}", True, BLACK)
+        text_img = font.render(f"Poengscore: {self.score}", True, BLACK)
         self.screen.blit(text_img, (10, FREEZONE_UP//3))
         
         
         
     
         if timer >= 1:
-            SCORE_VALUE += 1
+            self.score += 1
             timer = 0
 
 
@@ -119,26 +123,26 @@ class Game:
                 
             if event.type == pg.KEYDOWN:
                 # Spilleren skal hoppe hvis vi trykker på mellomromstasten
-                if event.key == pg.K_SPACE and self.jump_count < 3:
+                if event.key == pg.K_SPACE and self.jump_count < 2:
                     self.jump_count += 1
                     self.player.jump()
 
     # Metode som oppdaterer
     def update(self):
-        self.player.update()
         self.fuelbar.decrease_fuelbar()
 
-        if self.hindringer[0].x+self.hindringer[0].w < 0:
+        if len(self.hindringer) > 0 and self.hindringer[0].x+self.hindringer[0].w < 0:
                 self.hindringer.remove(self.hindringer[0])
         
         for h in self.hindringer:
-            h.update()
-            
             if pg.Rect.colliderect(h.rect, self.player.rect):
                 if self.playing:
                     self.playing = False
                 time.sleep(1)
                 self.running = False
+            
+            h.update()
+            
         
 
 
@@ -163,12 +167,23 @@ class Game:
                 self.fuelbar.fuel += s.food
                 s.x = 0-s.w
         
+        for s in self.star:
+            s.update()
+
+            if s.x+s.w < 0: 
+                self.star.remove(s)
+            
+            if pg.Rect.colliderect(s.rect, self.player.rect):
+                self.score += 10
+                s.x = 0-s.w
+        
         if self.fuelbar.fuel > self.fuelbar.max_fuel:
             self.fuelbar.fuel = self.fuelbar.max_fuel
             
         if (self.player.pos[1] + PLAYER_HEIGHT >= FREEZONE_DOWN):
             self.jump_count = 0
         
+        self.player.update()
 
     # Metode som tegner ting på skjermen
     def draw(self):
@@ -190,6 +205,9 @@ class Game:
         for s in self.soda:
             self.screen.blit(s.image, s.rect.center)
         
+        for s in self.star:
+            self.screen.blit(s.image, s.rect.center)
+        
         # "Flipper" displayet for å vise hva vi har tegnet
         pg.display.flip()
     
@@ -197,6 +215,7 @@ class Game:
     # Metode som viser start-skjerm
     def show_start_screen(self):
         pass
+
 
 
 
@@ -214,3 +233,4 @@ while game_object.running:
 # Avslutter pygame
 pg.quit()
 #sys.exit() # Dersom det ikke er tilstrekkelig med pg.quit()
+print(f"Du endte med {game_object.score} poeng!")

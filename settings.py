@@ -18,6 +18,7 @@ GREEN = (0, 255, 0)
 LIGHTBLUE = (100, 100, 255)
 GREY = (142, 142, 142)
 LIGHTRED = (255, 100, 100)
+YELLOW = (255, 255, 0)
 
 FREEZONE_UP = 60
 FREEZONE_DOWN = WINDOW_HEIGHT - FREEZONE_UP
@@ -34,8 +35,6 @@ fuel = 20
 ratio = fuel / max_fuel
 
 scroll_x = 0
-
-SCORE_VALUE = 0
 timer = 0
 
 # Innstillinger for Powerups

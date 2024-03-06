@@ -58,7 +58,7 @@ class Objekt:
 # Hindringer
 class Hindring(Objekt):
     def __init__(self):
-        self.x = random.randint(WINDOW_WIDTH, WINDOW_WIDTH*3)
+        self.x = WINDOW_WIDTH #random.randint(WINDOW_WIDTH, WINDOW_WIDTH*3)
         super().__init__()
         self.image.fill(BLACK)
     
@@ -85,15 +85,17 @@ class Powerup(Objekt):
         self.w = POWERUP_WIDTH
         self.h = POWERUP_HEIGHT
         super().__init__()
-        self.image.fill(GREY)
 
-class Boost(Powerup):
+class Star(Powerup):
     def __init__(self):
+        self.x = random.randint(WINDOW_WIDTH*6, WINDOW_WIDTH*10)
         super().__init__()
-    
+        self.image.fill(YELLOW)
+
     def update(self):
-        self.vx = 7.5
-        super().__init__()
+        self.vx = 10
+        super().update()
+
 
 class Burger(Objekt):
     def __init__(self):
