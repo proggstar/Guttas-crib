@@ -31,6 +31,7 @@ class Game:
         self.burger = []
         self.soda = []
         self.star = []
+        self.speed = SCROLL_SPEED
 
         self.jump_count = 0
         self.dt = self.clock.tick(FPS) / 1000
@@ -57,22 +58,22 @@ class Game:
             if dt >= 1:
                 a = random.randint(1,2)
                 if a == 1:
-                    ny = HindringV()
+                    ny = HindringV(self.speed)
                 elif a == 2:
-                    ny = HindringH()
+                    ny = HindringH(self.speed)
                 
                 self.hindringer.append(ny)
 
                 t1 = time.time()
 
             while len(self.burger) < 1:
-                self.burger.append(Burger())
+                self.burger.append(Burger(self.speed))
 
             while len(self.soda) < 1:
-                self.soda.append(Soda())
+                self.soda.append(Soda(self.speed))
 
             while len(self.star) < 1:
-                self.star.append(Star())
+                self.star.append(Star(self.speed))
             
             self.update()
             self.draw()
@@ -97,13 +98,11 @@ class Game:
     def scroll_background(self):
         # Laster inn bakgrunnsbildet
         bg_img = pg.image.load('bg.png')
-        # Fikser bakgrunnsbildet til størrelsen på skjermen
         bg_img = pg.transform.scale(bg_img, SIZE_BG)
         
         # Beregn x-posisjon for bakgrunnsbildet basert på tiden som har gått
-        scroll_speed = 4  # Juster denne verdien for ønsket rullehastighet
         global scroll_x
-        scroll_x -= scroll_speed
+        scroll_x -= self.speed
         if scroll_x <= -WINDOW_WIDTH:
             scroll_x = 0
         
@@ -143,10 +142,6 @@ class Game:
             
             h.update()
             
-        
-
-
-
         for b in self.burger:
             b.update()
 
@@ -183,6 +178,14 @@ class Game:
         if (self.player.pos[1] + PLAYER_HEIGHT >= FREEZONE_DOWN):
             self.jump_count = 0
         
+        """
+        if self.score == 10:
+            self.hindringer = []
+            self.burger = []
+            self.soda = []
+            self.star = []
+            self.speed = 5
+        """
         self.player.update()
 
     # Metode som tegner ting på skjermen

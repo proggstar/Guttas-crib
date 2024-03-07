@@ -12,6 +12,7 @@ class Player:
             START_X_PLAYER,
             START_Y_PLAYER
         )
+        self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
         
         self.pos = list(self.rect.center)
         self.vel = [0, 0]
@@ -58,22 +59,24 @@ class Objekt:
 # Hindringer
 class Hindring(Objekt):
     def __init__(self):
-        self.x = WINDOW_WIDTH #random.randint(WINDOW_WIDTH, WINDOW_WIDTH*3)
+        self.x = WINDOW_WIDTH
         super().__init__()
         self.image.fill(BLACK)
     
     def update(self):
-        self.vx = 4
+        self.vx = self.speed
         super().update()
         
 class HindringH(Hindring):
-    def __init__(self):
+    def __init__(self, speed):
+        self.speed = speed
         self.w = 50
         self.h = 20
         super().__init__()
 
 class HindringV(Hindring):
-    def __init__(self):
+    def __init__(self, speed):
+        self.speed = speed
         self.w = 20
         self.h = 50
         super().__init__()
@@ -87,40 +90,45 @@ class Powerup(Objekt):
         super().__init__()
 
 class Star(Powerup):
-    def __init__(self):
+    def __init__(self, speed):
         self.x = random.randint(WINDOW_WIDTH*6, WINDOW_WIDTH*10)
+        self.speed = speed
         super().__init__()
         self.image.fill(YELLOW)
 
     def update(self):
-        self.vx = 10
+        self.vx = self.speed*2.5
         super().update()
 
 
 class Burger(Objekt):
-    def __init__(self):
+    def __init__(self, speed):
         self.x = random.randint(WINDOW_WIDTH*2, WINDOW_WIDTH*3)
+        self.speed = speed
         self.food = 50
+
         self.w = 50
         self.h = 50
         super().__init__()
-        self.image.fill(LIGHTBLUE)
+        self.image = pg.transform.scale(pg.image.load('burger.png'), (self.w,self.h))
+        #self.image.fill(LIGHTBLUE)
 
     def update(self):
-        self.vx = 5
+        self.vx = self.speed*1.25
         super().update()
 
 class Soda(Objekt):
-    def __init__(self):
+    def __init__(self, speed):
         self.x = random.randint(WINDOW_WIDTH*3, WINDOW_WIDTH*6)
+        self.speed = speed
         self.food = 25
         self.w = 20
         self.h = 50
         super().__init__()
-        self.image.fill(RED)
+        self.image = pg.transform.scale(pg.image.load('soda.png'), (self.w,self.h))
 
     def update(self):
-        self.vx = 7
+        self.vx = self.speed*1.75
         super().update()
 
 
