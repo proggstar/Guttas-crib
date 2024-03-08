@@ -91,10 +91,11 @@ class Powerup(Objekt):
 
 class Star(Powerup):
     def __init__(self, speed):
-        self.x = random.randint(WINDOW_WIDTH*6, WINDOW_WIDTH*10)
+        self.x = random.randint(WINDOW_WIDTH*12, WINDOW_WIDTH*20)
         self.speed = speed
         super().__init__()
-        self.image.fill(YELLOW)
+        self.image = pg.transform.scale(pg.image.load('star.jpg'), (self.w,self.h))
+        #self.image.fill(YELLOW)
 
     def update(self):
         self.vx = self.speed*2.5
@@ -103,7 +104,7 @@ class Star(Powerup):
 
 class Burger(Objekt):
     def __init__(self, speed):
-        self.x = random.randint(WINDOW_WIDTH*2, WINDOW_WIDTH*3)
+        self.x = random.randint(WINDOW_WIDTH*4, WINDOW_WIDTH*6)
         self.speed = speed
         self.food = 50
 
@@ -150,7 +151,7 @@ class Fuelbar:
         
     
     def decrease_fuelbar(self):  
-        self.fuel -= 0.1
+        self.fuel -= 0.08
         if self.fuel < 0:
             self.fuel = 0
             time.sleep(1)

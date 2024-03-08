@@ -55,7 +55,14 @@ class Game:
 
             dt = t2-t1
 
-            if dt >= 1:
+            if self.score < 25:
+                SPR = 1
+            elif self.score < 50:
+                SPR = 0.75
+            elif self.score < 100:
+                SPR = 0.5
+            
+            if dt >= SPR:
                 a = random.randint(1,2)
                 if a == 1:
                     ny = HindringV(self.speed)
@@ -184,7 +191,7 @@ class Game:
             self.burger = []
             self.soda = []
             self.star = []
-            self.speed = 5
+            self.speed = 5  
         """
         self.player.update()
 
