@@ -19,8 +19,17 @@ class Game:
         
         # Attributt som styrer om spillet skal kjøres
         self.running = True
+        self.playing = False
 
-        
+    def show_start_screen(self):
+        start_screen = pg.transform.scale(pg.image.load('start_screen.png'), SIZE_BG)
+
+        self.screen.fill(WHITE)
+        self.screen.blit(start_screen,(0,60))
+        self.screen.blit(Player().image, Player().rect.center)
+
+        pg.display.flip()
+        self.events()
         
     # Metode for å starte et nytt spill
     def new(self):
@@ -47,13 +56,23 @@ class Game:
 
         t1 = time.time()
 
+        t1p = time.time()
+
         while self.playing:
             self.clock.tick(FPS)
             self.events()
 
             t2 = time.time()
 
+            t2p = time.time()
+
             dt = t2-t1
+
+            dtp = t2p - t1p
+
+            if dtp >= 1:
+                self.score += 1
+                t1p = time.time()
 
             if self.score < 25:
                 SPR = 1
@@ -87,20 +106,9 @@ class Game:
             
     
     def antallPoeng(self):
-        global timer
-        timer += self.dt
-        
         font = pg.font.SysFont('Arial', 20)
         text_img = font.render(f"Poengscore: {self.score}", True, BLACK)
         self.screen.blit(text_img, (10, FREEZONE_UP//3))
-        
-        
-        
-    
-        if timer >= 1:
-            self.score += 1
-            timer = 0
-
 
     def scroll_background(self):
         # Laster inn bakgrunnsbildet
@@ -128,8 +136,10 @@ class Game:
                 self.running = False # Spillet skal avsluttes
                 
             if event.type == pg.KEYDOWN:
-                # Spilleren skal hoppe hvis vi trykker på mellomromstasten
-                if event.key == pg.K_SPACE and self.jump_count < 2:
+
+                if self.playing == False and event.key == pg.K_SPACE:
+                    self.playing = True
+                elif self.playing and event.key == pg.K_SPACE and self.jump_count < 2:
                     self.jump_count += 1
                     self.player.jump()
 
@@ -221,10 +231,6 @@ class Game:
         # "Flipper" displayet for å vise hva vi har tegnet
         pg.display.flip()
     
-    
-    # Metode som viser start-skjerm
-    def show_start_screen(self):
-        pass
 
 
 
@@ -236,6 +242,11 @@ game_object = Game()
 # Spill-løkken
 while game_object.running:
     # Starter et nytt spill
+    
+    while game_object.playing == False:
+        game_object.show_start_screen()
+    
+
     game_object.new()
     
 
