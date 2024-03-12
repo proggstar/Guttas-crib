@@ -146,6 +146,7 @@ class Game:
             if event.type == pg.QUIT:
                 if self.playing:
                     self.playing = False
+                self.bgmusic_sfx.stop()
                 self.running = False # Spillet skal avsluttes
                 
             if event.type == pg.KEYDOWN:
@@ -157,6 +158,7 @@ class Game:
                 elif self.playing and event.key == pg.K_SPACE and self.jump_count < 2:
                     self.jump_count += 1
                     self.player.jump()
+                    self.fuelbar.fuel -= 5
 
     # Metode som oppdaterer
     def update(self):

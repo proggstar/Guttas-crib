@@ -17,11 +17,8 @@ class Player:
         self.vel = [0, 0]
         self.acc = [0, 0.8]
 
-        if self.pos[1] + PLAYER_HEIGHT == FREEZONE_DOWN:
-            self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
-        else:
-            self.image = pg.transform.scale(pg.image.load('diddy_jump.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
-        
+        self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
+
     
     def jump(self):
         self.vel[1] = -18
@@ -37,6 +34,11 @@ class Player:
         if (self.pos[1] <= FREEZONE_UP):
             self.pos[1] = FREEZONE_UP
             self.vel[1] = 0
+        
+        if self.pos[1] + PLAYER_HEIGHT == FREEZONE_DOWN:
+            self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
+        else:
+            self.image = pg.transform.scale(pg.image.load('diddy_jump.png'), (64,PLAYER_HEIGHT))
         
         self.rect.center = self.pos
 
@@ -157,7 +159,7 @@ class Fuelbar:
         
     
     def decrease_fuelbar(self):  
-        self.fuel -= 0.08
+        self.fuel -= 0.04
         if self.fuel < 0:
             self.fuel = 0
             time.sleep(1)
