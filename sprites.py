@@ -12,11 +12,15 @@ class Player:
             START_X_PLAYER,
             START_Y_PLAYER
         )
-        self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
         
         self.pos = list(self.rect.center)
         self.vel = [0, 0]
         self.acc = [0, 0.8]
+
+        if self.pos[1] + PLAYER_HEIGHT == FREEZONE_DOWN:
+            self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
+        else:
+            self.image = pg.transform.scale(pg.image.load('diddy_jump.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
         
     
     def jump(self):
@@ -37,9 +41,9 @@ class Player:
         self.rect.center = self.pos
 
 
-class Objekt:
+class Object:
     def __init__(self):
-        self.y = random.randint(FREEZONE_UP, FREEZONE_DOWN - 50)
+        self.y = random.randint(FREEZONE_UP, FREEZONE_DOWN - 80)
 
         self.image = pg.Surface((self.w, self.h))
         self.rect = self.image.get_rect()
@@ -57,7 +61,7 @@ class Objekt:
         )
 
 # Hindringer
-class Hindring(Objekt):
+class Obst(Object):
     def __init__(self):
         self.x = WINDOW_WIDTH
         super().__init__()
@@ -67,23 +71,25 @@ class Hindring(Objekt):
         self.vx = self.speed
         super().update()
         
-class HindringH(Hindring):
+class ObstH(Obst):
     def __init__(self, speed):
         self.speed = speed
-        self.w = 50
+        self.w = 80
         self.h = 20
         super().__init__()
+        self.image = pg.transform.scale(pg.image.load('obst_h.png'), (self.w,self.h))
 
-class HindringV(Hindring):
+class ObstV(Obst):
     def __init__(self, speed):
         self.speed = speed
         self.w = 20
-        self.h = 50
+        self.h = 80
         super().__init__()
+        self.image = pg.transform.scale(pg.image.load('obst_v.png'), (self.w,self.h))
 
 
 # Powerups
-class Powerup(Objekt):
+class Powerup(Object):
     def __init__(self):
         self.w = POWERUP_WIDTH
         self.h = POWERUP_HEIGHT
@@ -94,7 +100,7 @@ class Star(Powerup):
         self.x = random.randint(WINDOW_WIDTH*12, WINDOW_WIDTH*20)
         self.speed = speed
         super().__init__()
-        self.image = pg.transform.scale(pg.image.load('star.jpg'), (self.w,self.h))
+        self.image = pg.transform.scale(pg.image.load('star.png'), (self.w,self.h))
         #self.image.fill(YELLOW)
 
     def update(self):
@@ -102,9 +108,9 @@ class Star(Powerup):
         super().update()
 
 
-class Burger(Objekt):
+class Burger(Object):
     def __init__(self, speed):
-        self.x = random.randint(WINDOW_WIDTH*4, WINDOW_WIDTH*6)
+        self.x = random.randint(WINDOW_WIDTH*4, WINDOW_WIDTH*5)
         self.speed = speed
         self.food = 50
 
@@ -118,9 +124,9 @@ class Burger(Objekt):
         self.vx = self.speed*1.25
         super().update()
 
-class Soda(Objekt):
+class Soda(Object):
     def __init__(self, speed):
-        self.x = random.randint(WINDOW_WIDTH*3, WINDOW_WIDTH*6)
+        self.x = random.randint(WINDOW_WIDTH*3, WINDOW_WIDTH*4)
         self.speed = speed
         self.food = 25
         self.w = 20
