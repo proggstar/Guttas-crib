@@ -16,6 +16,8 @@ class Player:
         self.pos = list(self.rect.center)
         self.vel = [0, 0]
         self.acc = [0, 0.8]
+        self.t1 = time.time()
+        self.pictures = ['diddy_walk1.png', 'diddy_walk2.png']
 
         self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
 
@@ -34,12 +36,21 @@ class Player:
         if (self.pos[1] <= FREEZONE_UP):
             self.pos[1] = FREEZONE_UP
             self.vel[1] = 0
-        
+
         if self.pos[1] + PLAYER_HEIGHT == FREEZONE_DOWN:
-            self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
+            t2 = time.time()
+
+            dt = t2 -self.t1
+
+            if dt >= 0.25:
+                self.image = pg.transform.scale(pg.image.load(self.pictures[0]), (46,PLAYER_HEIGHT))
+                self.pictures.append(self.pictures[0])
+                self.pictures.remove(self.pictures[0])
+                self.t1 = time.time()
         else:
             self.image = pg.transform.scale(pg.image.load('diddy_jump.png'), (64,PLAYER_HEIGHT))
         
+        self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
 
@@ -101,6 +112,7 @@ class Star(Powerup):
     def __init__(self, speed):
         self.x = random.randint(WINDOW_WIDTH*12, WINDOW_WIDTH*20)
         self.speed = speed
+        self.food = 100
         super().__init__()
         self.image = pg.transform.scale(pg.image.load('star.png'), (self.w,self.h))
         #self.image.fill(YELLOW)
@@ -159,7 +171,7 @@ class Fuelbar:
         
     
     def decrease_fuelbar(self):  
-        self.fuel -= 0.04
+        self.fuel -= 0.05
         if self.fuel < 0:
             self.fuel = 0
             time.sleep(1)

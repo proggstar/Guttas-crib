@@ -158,7 +158,7 @@ class Game:
                 elif self.playing and event.key == pg.K_SPACE and self.jump_count < 2:
                     self.jump_count += 1
                     self.player.jump()
-                    self.fuelbar.fuel -= 5
+                    self.fuelbar.fuel -= 5 
 
     # Metode som oppdaterer
     def update(self):
@@ -215,6 +215,7 @@ class Game:
                 self.xp_sfx.play()
                 self.bgmusic_sfx.set_volume(self.bgmusic_volume)
                 self.score += 10
+                self.fuelbar.fuel += s.food
                 s.x = 0-s.w
         
         if self.fuelbar.fuel > self.fuelbar.max_fuel:
