@@ -40,7 +40,7 @@ class Game:
 
         self.screen.fill(WHITE)
         self.screen.blit(start_screen,(0,60))
-        self.screen.blit(Player().image, Player().rect.center)
+        self.screen.blit(Player().image, Player().rect)
 
         self.events()
         pg.display.flip()
@@ -97,9 +97,9 @@ class Game:
             if dt >= SPR:
                 a = random.randint(1,2)
                 if a == 1:
-                    ny = ObstV(self.speed)
-                elif a == 2:
                     ny = ObstH(self.speed)
+                elif a == 2:
+                    ny = ObstV(self.speed)
                 
                 self.obstacles.append(ny)
 
@@ -163,18 +163,19 @@ class Game:
     # Metode som oppdaterer
     def update(self):
         self.fuelbar.decrease_fuelbar()
+        if self.fuelbar.fuel <= 0:
+            self.bgmusic_sfx.stop()
+            self.playing = False
+            
 
         if len(self.obstacles) > 0 and self.obstacles[0].x+self.obstacles[0].w < 0:
                 self.obstacles.remove(self.obstacles[0])
         
         for h in self.obstacles:
             if pg.Rect.colliderect(h.rect, self.player.rect):
-                if self.playing:
-                    self.bgmusic_sfx.stop()
-                    self.damage_sfx.play()
-                    self.playing = False
-                #time.sleep(1)
-                #self.running = False
+                self.bgmusic_sfx.stop()
+                self.damage_sfx.play()
+                self.playing = False
             
             h.update()
             
@@ -234,20 +235,20 @@ class Game:
         self.antallPoeng()
         
         # Tegner spilleren
-        self.screen.blit(self.player.image, self.player.rect.center)
+        self.screen.blit(self.player.image, self.player.rect)
         self.fuelbar.draw_fuelbar(self.screen)
         
         for h in self.obstacles :
-            self.screen.blit(h.image, h.rect.center)
+            self.screen.blit(h.image, h.rect)
         
         for b in self.burger:
-            self.screen.blit(b.image, b.rect.center)
+            self.screen.blit(b.image, b.rect)
         
         for s in self.soda:
-            self.screen.blit(s.image, s.rect.center)
+            self.screen.blit(s.image, s.rect)
         
         for s in self.star:
-            self.screen.blit(s.image, s.rect.center)
+            self.screen.blit(s.image, s.rect)
         
         # "Flipper" displayet for å vise hva vi har tegnet
         pg.display.flip()

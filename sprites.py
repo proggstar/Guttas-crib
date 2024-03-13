@@ -5,8 +5,7 @@ import time
 
 class Player:
     def __init__(self):
-        self.image = pg.Surface((PLAYER_WIDTH, PLAYER_HEIGHT))
-        self.image.fill(GREEN)
+        self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.center = (
             START_X_PLAYER,
@@ -19,7 +18,6 @@ class Player:
         self.t1 = time.time()
         self.pictures = ['diddy_walk1.png', 'diddy_walk2.png']
 
-        self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
 
     
     def jump(self):
@@ -30,14 +28,14 @@ class Player:
         self.vel[1] += self.acc[1]
         self.pos[1] += self.vel[1] + 0.5*self.acc[1]
         
-        if (self.pos[1] + PLAYER_HEIGHT >= FREEZONE_DOWN):
-            self.pos[1] = FREEZONE_DOWN - PLAYER_HEIGHT
+        if (self.pos[1] + PLAYER_HEIGHT//2 >= FREEZONE_DOWN):
+            self.pos[1] = FREEZONE_DOWN - PLAYER_HEIGHT//2
         
-        if (self.pos[1] <= FREEZONE_UP):
-            self.pos[1] = FREEZONE_UP
+        if (self.pos[1] - PLAYER_HEIGHT//2 <= FREEZONE_UP):
+            self.pos[1] = FREEZONE_UP + PLAYER_HEIGHT//2
             self.vel[1] = 0
 
-        if self.pos[1] + PLAYER_HEIGHT == FREEZONE_DOWN:
+        if self.pos[1] + PLAYER_HEIGHT >= FREEZONE_DOWN:
             t2 = time.time()
 
             dt = t2 -self.t1
@@ -56,7 +54,7 @@ class Player:
 
 class Object:
     def __init__(self):
-        self.y = random.randint(FREEZONE_UP, FREEZONE_DOWN - 80)
+        self.y = random.randint(FREEZONE_UP+40, FREEZONE_DOWN - 40)
 
         self.image = pg.Surface((self.w, self.h))
         self.rect = self.image.get_rect()
@@ -76,7 +74,7 @@ class Object:
 # Hindringer
 class Obst(Object):
     def __init__(self):
-        self.x = WINDOW_WIDTH
+        self.x = WINDOW_WIDTH + 40
         super().__init__()
         self.image.fill(BLACK)
     
@@ -172,7 +170,4 @@ class Fuelbar:
     
     def decrease_fuelbar(self):  
         self.fuel -= 0.05
-        if self.fuel < 0:
-            self.fuel = 0
-            time.sleep(1)
-            pg.quit()
+        
