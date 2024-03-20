@@ -29,12 +29,10 @@ PLAYER_HEIGHT = 76
 START_X_PLAYER = WINDOW_WIDTH * 0.2
 START_Y_PLAYER = FREEZONE_DOWN - PLAYER_HEIGHT//2
 
-max_fuel = 100
-fuel = 20
-ratio = fuel / max_fuel
+MAX_FUEL = 100
+FUEL = 20
 
-timer = 0
-scroll_x = 0
+SCROLL_X = 0
 
 # Innstillinger for Powerups
 POWERUP_WIDTH = 40

@@ -5,7 +5,7 @@ import time
 
 class Player:
     def __init__(self):
-        self.image = pg.transform.scale(pg.image.load('player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
+        self.image = pg.transform.scale(pg.image.load('Bilder/player.png'), (PLAYER_WIDTH,PLAYER_HEIGHT))
         self.rect = self.image.get_rect()
         self.rect.center = (
             START_X_PLAYER,
@@ -16,7 +16,7 @@ class Player:
         self.vel = [0, 0]
         self.acc = [0, 0.8]
         self.t1 = time.time()
-        self.pictures = ['diddy_walk1.png', 'diddy_walk2.png']
+        self.pictures = ['Bilder/diddy_walk2.png', 'Bilder/diddy_walk1.png']
 
 
     
@@ -45,8 +45,10 @@ class Player:
                 self.pictures.append(self.pictures[0])
                 self.pictures.remove(self.pictures[0])
                 self.t1 = time.time()
+        elif self.vel[1] > 0 and self.pos[1] >= FREEZONE_DOWN-200:
+            self.image = pg.transform.scale(pg.image.load('Bilder/diddy_walk2.png'), (46,PLAYER_HEIGHT))
         else:
-            self.image = pg.transform.scale(pg.image.load('diddy_jump.png'), (64,PLAYER_HEIGHT))
+            self.image = pg.transform.scale(pg.image.load('Bilder/diddy_jump.png'), (64,PLAYER_HEIGHT))
         
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
@@ -88,7 +90,7 @@ class ObstH(Obst):
         self.w = 80
         self.h = 20
         super().__init__()
-        self.image = pg.transform.scale(pg.image.load('obst_h.png'), (self.w,self.h))
+        self.image = pg.transform.scale(pg.image.load('Bilder/obst_h.png'), (self.w,self.h))
 
 class ObstV(Obst):
     def __init__(self, speed):
@@ -96,7 +98,7 @@ class ObstV(Obst):
         self.w = 20
         self.h = 80
         super().__init__()
-        self.image = pg.transform.scale(pg.image.load('obst_v.png'), (self.w,self.h))
+        self.image = pg.transform.scale(pg.image.load('Bilder/obst_v.png'), (self.w,self.h))
 
 
 # Powerups
@@ -112,8 +114,7 @@ class Star(Powerup):
         self.speed = speed
         self.food = 100
         super().__init__()
-        self.image = pg.transform.scale(pg.image.load('star.png'), (self.w,self.h))
-        #self.image.fill(YELLOW)
+        self.image = pg.transform.scale(pg.image.load('Bilder/star.png'), (self.w,self.h))
 
     def update(self):
         self.vx = self.speed*2.5
@@ -129,8 +130,7 @@ class Burger(Object):
         self.w = 50
         self.h = 50
         super().__init__()
-        self.image = pg.transform.scale(pg.image.load('burger.png'), (self.w,self.h))
-        #self.image.fill(LIGHTBLUE)
+        self.image = pg.transform.scale(pg.image.load('Bilder/burger.png'), (self.w,self.h))
 
     def update(self):
         self.vx = self.speed*1.25
@@ -144,7 +144,7 @@ class Soda(Object):
         self.w = 20
         self.h = 50
         super().__init__()
-        self.image = pg.transform.scale(pg.image.load('soda.png'), (self.w,self.h))
+        self.image = pg.transform.scale(pg.image.load('Bilder/soda.png'), (self.w,self.h))
 
     def update(self):
         self.vx = self.speed*1.75

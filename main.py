@@ -22,12 +22,12 @@ class Game:
         self.playing = False
 
         #Musikk
-        self.lobby_sfx = pg.mixer.Sound('lobby.mp3')
-        self.bgmusic_sfx = pg.mixer.Sound('bgmusic.mp3')
-        self.damage_sfx = pg.mixer.Sound('damage.mp3')
-        self.eating_sfx = pg.mixer.Sound('eating.mp3')
-        self.drinking_sfx = pg.mixer.Sound('drinking.mp3')
-        self.xp_sfx = pg.mixer.Sound('xp.mp3')
+        self.lobby_sfx = pg.mixer.Sound('Lyd/lobby.mp3')
+        self.bgmusic_sfx = pg.mixer.Sound('Lyd/bgmusic.mp3')
+        self.damage_sfx = pg.mixer.Sound('Lyd/damage.mp3')
+        self.eating_sfx = pg.mixer.Sound('Lyd/eating.mp3')
+        self.drinking_sfx = pg.mixer.Sound('Lyd/drinking.mp3')
+        self.xp_sfx = pg.mixer.Sound('Lyd/xp.mp3')
 
         self.lobby_sfx.play()
 
@@ -36,20 +36,21 @@ class Game:
         self.bgmusic_sfx.set_volume(self.bgmusic_volume)
 
     def show_start_screen(self):
-        start_screen = pg.transform.scale(pg.image.load('start_screen.png'), SIZE_BG)
+        start_screen = pg.transform.scale(pg.image.load('Bilder/start_screen.png'), SIZE_BG)
 
         self.screen.fill(WHITE)
         self.screen.blit(start_screen,(0,60))
         self.screen.blit(Player().image, Player().rect)
+        
+        pg.display.flip()
 
         self.events()
-        pg.display.flip()
-        
+                
     # Metode for å starte et nytt spill
     def new(self):
         # Lager spiller-objekt
         self.player = Player()
-        self.fuelbar = Fuelbar(WINDOW_WIDTH * 0.725, FREEZONE_UP//3, 250, 20, 100)
+        self.fuelbar = Fuelbar(WINDOW_WIDTH * 0.725, FREEZONE_UP//3, 250, FUEL, MAX_FUEL)
         self.obstacles = []
         self.burger = []
         self.soda = []
@@ -58,7 +59,7 @@ class Game:
 
         self.jump_count = 0
         self.score = 0
-        
+
         self.run()
 
 
@@ -125,18 +126,18 @@ class Game:
 
     def scroll_background(self):
         # Laster inn bakgrunnsbildet
-        bg_img = pg.image.load('bg.png')
+        bg_img = pg.image.load('Bilder/bg.png')
         bg_img = pg.transform.scale(bg_img, SIZE_BG)
         
         # Beregn x-posisjon for bakgrunnsbildet basert på tiden som har gått
-        global scroll_x
-        scroll_x -= self.speed
-        if scroll_x <= -WINDOW_WIDTH:
-            scroll_x = 0
+        global SCROLL_X
+        SCROLL_X -= self.speed
+        if SCROLL_X <= -WINDOW_WIDTH:
+            SCROLL_X = 0
         
         # Tegn to kopier av bakgrunnsbildet ved siden av hverandre for å oppnå rullingseffekten
-        self.screen.blit(bg_img, (scroll_x, 60))
-        self.screen.blit(bg_img, (scroll_x + WINDOW_WIDTH, 60))
+        self.screen.blit(bg_img, (SCROLL_X, 60))
+        self.screen.blit(bg_img, (SCROLL_X + WINDOW_WIDTH, 60))
 
     # Metode som håndterer hendelser
     def events(self):
@@ -169,7 +170,7 @@ class Game:
             
 
         if len(self.obstacles) > 0 and self.obstacles[0].x+self.obstacles[0].w < 0:
-                self.obstacles.remove(self.obstacles[0])
+            self.obstacles.remove(self.obstacles[0])
         
         for h in self.obstacles:
             if pg.Rect.colliderect(h.rect, self.player.rect):
@@ -238,36 +239,47 @@ class Game:
         self.screen.blit(self.player.image, self.player.rect)
         self.fuelbar.draw_fuelbar(self.screen)
         
-        for h in self.obstacles :
-            self.screen.blit(h.image, h.rect)
+        self.objects = self.obstacles + self.burger + self.soda + self.star
         
-        for b in self.burger:
-            self.screen.blit(b.image, b.rect)
+        for o in self.objects:
+            self.screen.blit(o.image, o.rect)
         
-        for s in self.soda:
-            self.screen.blit(s.image, s.rect)
-        
-        for s in self.star:
-            self.screen.blit(s.image, s.rect)
         
         # "Flipper" displayet for å vise hva vi har tegnet
         pg.display.flip()
     
     def show_end_screen(self):
-
-        #start_screen = pg.transform.scale(pg.image.load('start_screen.png'), SIZE_BG)
-
+        end_screen = pg.transform.scale(pg.image.load('Bilder/bg.png'), SIZE_BG)
         self.screen.fill(WHITE)
-
-        #self.screen.blit(start_screen,(0,60))
+        self.screen.blit(end_screen,(0,60))
 
         font = pg.font.SysFont('Comicsans', 50)
         text_img = font.render(f"FINAL SCORE: {self.score}", True, BLACK)
-        self.screen.blit(text_img, ((WINDOW_WIDTH//2)-200, (WINDOW_HEIGHT//2)))
+        self.screen.blit(text_img, ((WINDOW_WIDTH//2)-200, (WINDOW_HEIGHT//2)-30))
+        
+        font = pg.font.SysFont('Comicsans', 40)
+        if self.score < 46:
+            score_text = font.render(f"Dette er dårligere enn Diddy sin high score!", True, BLACK)
+        if self.score == 46:
+            score_text = font.render(f"Dette er helt likt som Diddy sin high score!", True, BLACK)
+        if self.score > 46:
+            score_text = font.render(f"Wow!Dette er bedre enn Diddy sin high score!", True, BLACK)
+        
+        self.screen.blit(score_text, (85, (WINDOW_HEIGHT//2)+30))
         
         pg.display.flip()
-        time.sleep(3)
-        self.running = False
+        
+        t1 = time.time()
+        while self.running:
+            t2 = time.time()
+            dt = t2 - t1
+                        
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    self.running = False
+            
+            if dt >= 5:
+                self.running = False
 
 
 
@@ -278,7 +290,6 @@ game_object = Game()
 
 # Spill-løkken
 while game_object.running:
-    # Starter et nytt spill
     
     while game_object.playing == False:
         game_object.show_start_screen()
@@ -287,11 +298,5 @@ while game_object.running:
         game_object.new()
 
     game_object.show_end_screen()
-    
 
-
-
-# Avslutter pygame
 pg.quit()
-#sys.exit() # Dersom det ikke er tilstrekkelig med pg.quit()
-print(f"Du endte med {game_object.score} poeng!")
