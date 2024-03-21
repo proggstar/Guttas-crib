@@ -34,6 +34,8 @@ FUEL = 20
 
 SCROLL_X = 0
 
+DIDDY_HS = 46
+
 # Innstillinger for Powerups
 POWERUP_WIDTH = 40
 POWERUP_HEIGHT = 40

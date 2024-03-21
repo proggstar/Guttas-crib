@@ -258,11 +258,11 @@ class Game:
         self.screen.blit(text_img, ((WINDOW_WIDTH//2)-200, (WINDOW_HEIGHT//2)-30))
         
         font = pg.font.SysFont('Comicsans', 40)
-        if self.score < 46:
+        if self.score < DIDDY_HS:
             score_text = font.render(f"Dette er dårligere enn Diddy sin high score!", True, BLACK)
-        if self.score == 46:
+        if self.score == DIDDY_HS:
             score_text = font.render(f"Dette er helt likt som Diddy sin high score!", True, BLACK)
-        if self.score > 46:
+        if self.score > DIDDY_HS:
             score_text = font.render(f"Wow!Dette er bedre enn Diddy sin high score!", True, BLACK)
         
         self.screen.blit(score_text, (85, (WINDOW_HEIGHT//2)+30))
